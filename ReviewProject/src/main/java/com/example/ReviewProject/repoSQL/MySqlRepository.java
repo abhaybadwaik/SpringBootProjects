@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MySqlRepository extends JpaRepository<CustomerEntity,Long> {
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
 }
