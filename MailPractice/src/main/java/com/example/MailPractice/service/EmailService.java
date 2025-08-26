@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.io.File;
 
@@ -15,12 +16,14 @@ public class EmailService {
     @Autowired
     JavaMailSender javaMailSender;
 
+    @Async("threadPoolTaskExecutor")
     public void sendMails(String to) throws MessagingException {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject("This is My First Mail Sending");
         simpleMailMessage.setText("HOW YOU FEELING !!?");
-//        javaMailSender.send(simpleMailMessage);
+        javaMailSender.send(simpleMailMessage);
+        System.out.println(Thread.currentThread());
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
