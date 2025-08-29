@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 public class EmailController {
     @Autowired
     EmailServices emailServices;
-    @PostMapping("sendMail")
+
+    @PostMapping("/sendMail")
     public ResponseEntity<String> sendMails(@RequestParam String [] to,
                                             @RequestParam String [] cc,
                                             @RequestParam String [] bcc,
@@ -27,7 +30,7 @@ public class EmailController {
         emailServices.sendMail(dtoClass);
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
-    @PostMapping("sendMime")
+    @PostMapping("/sendMime")
     public ResponseEntity<String> mimeMail(@RequestParam String [] to,
                                            @RequestParam String [] cc,
                                            @RequestParam String [] bcc,
@@ -39,9 +42,33 @@ public class EmailController {
         return new ResponseEntity<>("Attachment sent Succefully",HttpStatus.OK);
 
     }
-    @GetMapping("readMails")
-    public ResponseEntity<String> readMails() throws MessagingException {
+    @GetMapping("/readMails")
+    public ResponseEntity<String> readMails() throws MessagingException, IOException {
         emailServices.readMail();
-        return
+        return new  ResponseEntity<>("Mails got read check Console",HttpStatus.OK);
+    }
+
+    @GetMapping("/readLastFiveMails")
+    public ResponseEntity<String> readLastFiveMails() throws MessagingException, IOException {
+        emailServices.readLastFiveMails();
+        return new ResponseEntity<>("First Five Mail Got Read Check Console",HttpStatus.OK);
+    }
+
+    @GetMapping("/readFirstFiveMail")
+    public ResponseEntity<String> FirstFive() throws MessagingException, IOException {
+        emailServices.readFirstFiveMail();
+        return new ResponseEntity<>("Last Five LAtest mail Check console",HttpStatus.OK);
+    }
+
+    @GetMapping("/recentUnseenMail")
+    public ResponseEntity<String> recentUnseenMail() throws MessagingException, IOException {
+        emailServices.recentFiveUnseenMail();
+        return new ResponseEntity<>("Check Recent Unseen Mail in IntelleJ Console",HttpStatus.OK);
+    }
+
+    @GetMapping("lastFiveUnseenMail")
+    public ResponseEntity<String> lastUnseen() throws MessagingException, IOException {
+        emailServices.lastFiveUnseenMail();
+        return new ResponseEntity<>("Last five Unseen Mails Check Console ",HttpStatus.OK);
     }
 }
