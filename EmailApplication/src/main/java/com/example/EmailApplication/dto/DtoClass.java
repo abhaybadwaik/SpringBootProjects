@@ -14,7 +14,6 @@ public class DtoClass {
     private String [] bcc;
     private String  subject;
     private String text;
-//    private String htmlText;
-    private MultipartFile [] file;
+//    private MultipartFile [] file;
 
 }

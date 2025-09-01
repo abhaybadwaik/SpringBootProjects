@@ -2,11 +2,16 @@ package com.example.EmailApplication.service;
 
 import com.example.EmailApplication.configuration.ImapConfig;
 import com.example.EmailApplication.dto.DtoClass;
+import com.example.EmailApplication.exception.FailedToSendEmailException;
 import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.search.FlagTerm;
+import jakarta.mail.search.*;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,10 +19,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EmailServices {
@@ -34,11 +38,15 @@ public class EmailServices {
         simpleMailMessage.setBcc(dtoClass.getBcc());
         simpleMailMessage.setSubject(dtoClass.getSubject());
         simpleMailMessage.setText(dtoClass.getText());
-        javaMailSender.send(simpleMailMessage);
+        try {
+            javaMailSender.send(simpleMailMessage);
+        } catch (MailException e) {
+            throw new FailedToSendEmailException("Failed to send email to : " + Arrays.toString(simpleMailMessage.getTo()));
+        }
     }
 
-    @Async("threadPoolTaskExecutor")
-    public void SendMemeMail(DtoClass dtoClass) throws MessagingException {
+
+    public void SendMemeMail(DtoClass dtoClass) throws MessagingException, InterruptedException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 
@@ -47,18 +55,23 @@ public class EmailServices {
         mimeMessageHelper.setBcc(dtoClass.getBcc());
         mimeMessageHelper.setSubject(dtoClass.getSubject());
         mimeMessageHelper.setText(dtoClass.getText(), true);
-        for (int i = 0; i < dtoClass.getFile().length; i++) {
-            mimeMessageHelper.addAttachment(dtoClass.getFile()[i].getOriginalFilename(), dtoClass.getFile()[i], dtoClass.getFile()[i].getContentType());
-        }
-        MultipartFile[] multipartFiles = dtoClass.getFile();
+//        for (int i = 0; i < dtoClass.getFile().length; i++) {
+//            mimeMessageHelper.addAttachment(dtoClass.getFile()[i].getOriginalFilename(), dtoClass.getFile()[i], dtoClass.getFile()[i].getContentType());
+//        }
+//        File file1 = new File("\"C:\\Users\\ABHAY\\Downloads\\products.pdf\"");
+        ClassPathResource classPathResource = new ClassPathResource("docs/products.pdf");
+        mimeMessageHelper.addAttachment("sumith.pdf",classPathResource);
 
+//        MultipartFile[] multipartFiles = dtoClass.getFile();
         String text = dtoClass.getText();
 
-        for (MultipartFile file : multipartFiles) {
-            String cid = UUID.randomUUID().toString();
-            mimeMessageHelper.addInline(cid, file, file.getContentType());
-            text = text.replaceFirst("abc", cid);
-        }
+//        for (MultipartFile file : multipartFiles) {
+//            String cid = UUID.randomUUID().toString();
+//            mimeMessageHelper.addInline(cid, file, file.getContentType());
+//            text = text.replaceFirst("abc", cid);
+//        }
+
+
         mimeMessageHelper.setText(text, true);
         javaMailSender.send(mimeMessage);
     }
@@ -217,28 +230,75 @@ public class EmailServices {
         store.close();
     }
 
-    public void fetchMailsByFilters() throws MessagingException, IOException {
+    @Async("threadPoolTaskExecutor")
+    public void getEmailsFromSender(String sender) throws MessagingException, IOException {
         Properties properties = new Properties();
         properties.put("mail.imap.host", imapConfig.getHost());
         properties.put("mail.imap.port", imapConfig.getPort());
-        properties.put("mail.imap.protocol", imapConfig.getProtocol());
-        properties.put("ssl.enable", imapConfig.getSslEnable());
+        properties.put("mail.store.protocol", imapConfig.getProtocol());
+        properties.put("mail.imap.ssl.enable", imapConfig.getSslEnable());
 
-        Session instance = Session.getInstance(properties);
-        Store store = instance.getStore("imaps");
+        Session session = Session.getInstance(properties);
+        Store store = session.getStore(imapConfig.getProtocol());
         store.connect(imapConfig.getHost(), imapConfig.getUser(), imapConfig.getPassword());
+
         Folder inbox = store.getFolder("INBOX");
         inbox.open(Folder.READ_ONLY);
-        int messageCount = inbox.getMessageCount();
-        System.out.println(messageCount);
 
-        Message[] messages = inbox.getMessages();
-        
+        SearchTerm searchTerm = new FromStringTerm(sender);
+        Message[] messages = inbox.search(searchTerm);
+        System.out.println("Total mails from "+ sender + " is : " + messages.length + "\n");
+
         for (Message message : messages) {
             System.out.println("Subjects :-" + message.getSubject());
             System.out.println("From :- " + Arrays.toString(message.getFrom()));
-            Object content = message.getContent();
-            System.out.println("Content:- " + content.toString());
+            System.out.println("Date :- " + message.getReceivedDate());
+
+        }
+        inbox.close();
+        store.close();
+    }
+
+    public void readMailsWithFilters(String subject, String recipientEmail, Date afterDate) throws MessagingException, IOException {
+        Properties properties = new Properties();
+        properties.put("mail.imap.host",imapConfig.getHost());
+        properties.put("mail.imap.port",imapConfig.getPort());
+        properties.put("mail.imap.protocol",imapConfig.getProtocol());
+        properties.put("mail.imap.ssl.enable",imapConfig.getSslEnable());
+
+        Session session= Session.getInstance(properties);
+        Store store = session.getStore(imapConfig.getProtocol());
+        store.connect(imapConfig.getHost(), imapConfig.getUser(), imapConfig.getPassword());
+
+        Folder inbox = store.getFolder("INBOX");
+        inbox.open(Folder.READ_ONLY);
+
+        List<SearchTerm> terms = new ArrayList<>();
+
+        if (subject != null && !subject.isEmpty()){
+            terms.add(new SubjectTerm(subject));
+        }
+        if (recipientEmail != null && !recipientEmail.isEmpty()){
+            terms.add(new RecipientTerm(Message.RecipientType.TO,new InternetAddress(recipientEmail)));
+        }
+        if (afterDate != null){
+            terms.add(new SentDateTerm(ComparisonTerm.GT,afterDate));
+        }
+
+        SearchTerm finalTerm;
+        if (terms.size()==1){
+            finalTerm = terms.get(0);
+        } else {
+            finalTerm = new AndTerm(terms.toArray(new SearchTerm[0]));
+        }
+
+        Message[] filtered = inbox.search(finalTerm);
+        for (Message message : filtered) {
+            System.out.println("Subject: " + message.getSubject());
+            System.out.println("From: " + Arrays.toString(message.getFrom()));
+            System.out.println("Date: " + message.getReceivedDate());
+            System.out.println("Content" + message.getContent());
+            System.out.println("-----");
         }
 
         inbox.close();
