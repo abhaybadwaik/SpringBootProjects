@@ -84,4 +84,14 @@ public class EmailController {
         emailServices.readMailsWithFilters(subject,recipientEmail,afterDate);
         return new ResponseEntity<>("Filtered Mail Executed Check Console",HttpStatus.OK);
     }
+
+    @GetMapping("/downloadAttachment")
+    public String downloadAttachments(@RequestParam String saveDir) {
+        try {
+            emailServices.downloadAttachments(saveDir);
+            return "✅ Attachments downloaded successfully to: " + saveDir;
+        } catch (Exception e) {
+            return "❌ Failed to download attachments: " + e.getMessage();
+        }
+    }
 }

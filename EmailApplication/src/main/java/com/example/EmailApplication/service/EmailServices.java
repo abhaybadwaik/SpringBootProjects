@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -259,6 +261,7 @@ public class EmailServices {
         store.close();
     }
 
+    @Async("threadPoolTaskExecutor")
     public void readMailsWithFilters(String subject, String recipientEmail, Date afterDate) throws MessagingException, IOException {
         Properties properties = new Properties();
         properties.put("mail.imap.host",imapConfig.getHost());
@@ -304,4 +307,55 @@ public class EmailServices {
         inbox.close();
         store.close();
     }
+
+    @Async("threadPoolTaskExecutor")
+    public void downloadAttachments(String saveDir) throws Exception {
+        Properties properties = new Properties();
+        properties.put("mail.imap.host", imapConfig.getHost());
+        properties.put("mail.imap.port", imapConfig.getPort());
+        properties.put("mail.store.protocol", imapConfig.getProtocol());
+        properties.put("mail.imap.ssl.enable", imapConfig.getSslEnable());
+
+        Session session = Session.getInstance(properties);
+        Store store = session.getStore(imapConfig.getProtocol());
+        store.connect(imapConfig.getHost(), imapConfig.getUser(), imapConfig.getPassword());
+
+        Folder inbox = store.getFolder("INBOX");
+        inbox.open(Folder.READ_ONLY);
+
+        Message[] messages = inbox.getMessages();
+
+        for (Message message : messages) {
+            if (message.getContentType().contains("multipart")) {
+                Multipart multipart = (Multipart) message.getContent();
+
+                for (int i = 0; i < multipart.getCount(); i++) {
+                    BodyPart bodyPart = multipart.getBodyPart(i);
+
+                    // Check if it has an attachment
+                    if (Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())
+                            || bodyPart.getFileName() != null) {
+
+                        String fileName = bodyPart.getFileName();
+                        File file = new File(saveDir + File.separator + fileName);
+
+                        try (InputStream is = bodyPart.getInputStream();
+                             FileOutputStream fos = new FileOutputStream(file)) {
+
+                            byte[] buf = new byte[4096];
+                            int bytesRead;
+                            while ((bytesRead = is.read(buf)) != -1) {
+                                fos.write(buf, 0, bytesRead);
+                            }
+                            System.out.println("✅ Saved attachment: " + file.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
+
+        inbox.close(false);
+        store.close();
+    }
+
 }
