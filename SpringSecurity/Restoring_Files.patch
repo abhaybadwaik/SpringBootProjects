@@ -1,0 +1,1793 @@
+Subject: [PATCH] Restoring Files
+---
+Index: SpringSecurity/.gitignore
+===================================================================
+diff --git a/SpringSecurity/.gitignore b/SpringSecurity/.gitignore
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/.gitignore	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,33 @@
++HELP.md
++target/
++.mvn/wrapper/maven-wrapper.jar
++!**/src/main/**/target/
++!**/src/test/**/target/
++
++### STS ###
++.apt_generated
++.classpath
++.factorypath
++.project
++.settings
++.springBeans
++.sts4-cache
++
++### IntelliJ IDEA ###
++.idea
++*.iws
++*.iml
++*.ipr
++
++### NetBeans ###
++/nbproject/private/
++/nbbuild/
++/dist/
++/nbdist/
++/.nb-gradle/
++build/
++!**/src/main/**/build/
++!**/src/test/**/build/
++
++### VS Code ###
++.vscode/
+Index: SpringSecurity/.mvn/wrapper/maven-wrapper.properties
+===================================================================
+diff --git a/SpringSecurity/.mvn/wrapper/maven-wrapper.properties b/SpringSecurity/.mvn/wrapper/maven-wrapper.properties
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/.mvn/wrapper/maven-wrapper.properties	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,2 @@
++distributionType=only-script
++distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip
+Index: SpringSecurity/pom.xml
+===================================================================
+diff --git a/SpringSecurity/pom.xml b/SpringSecurity/pom.xml
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/pom.xml	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,97 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>org.springframework.boot</groupId>
++		<artifactId>spring-boot-starter-parent</artifactId>
++		<version>3.5.5</version>
++		<relativePath/> <!-- lookup parent from repository -->
++	</parent>
++	<groupId>com.example</groupId>
++	<artifactId>SpringSecurity</artifactId>
++	<version>0.0.1-SNAPSHOT</version>
++	<name>SpringSecurity</name>
++	<description>Demo project for Spring Boot</description>
++	<url/>
++	<licenses>
++		<license/>
++	</licenses>
++	<developers>
++		<developer/>
++	</developers>
++	<scm>
++		<connection/>
++		<developerConnection/>
++		<tag/>
++		<url/>
++	</scm>
++	<properties>
++		<java.version>24</java.version>
++	</properties>
++	<dependencies>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-data-jpa</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-security</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-web</artifactId>
++		</dependency>
++
++		<dependency>
++			<groupId>com.oracle.database.jdbc</groupId>
++			<artifactId>ojdbc11</artifactId>
++			<scope>runtime</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.projectlombok</groupId>
++			<artifactId>lombok</artifactId>
++			<optional>true</optional>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.security</groupId>
++			<artifactId>spring-security-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++	</dependencies>
++
++	<build>
++		<plugins>
++			<plugin>
++				<groupId>org.apache.maven.plugins</groupId>
++				<artifactId>maven-compiler-plugin</artifactId>
++				<configuration>
++					<annotationProcessorPaths>
++						<path>
++							<groupId>org.projectlombok</groupId>
++							<artifactId>lombok</artifactId>
++						</path>
++					</annotationProcessorPaths>
++				</configuration>
++			</plugin>
++			<plugin>
++				<groupId>org.springframework.boot</groupId>
++				<artifactId>spring-boot-maven-plugin</artifactId>
++				<configuration>
++					<excludes>
++						<exclude>
++							<groupId>org.projectlombok</groupId>
++							<artifactId>lombok</artifactId>
++						</exclude>
++					</excludes>
++				</configuration>
++			</plugin>
++		</plugins>
++	</build>
++
++</project>
+Index: SpringSecurity/src/main/java/com/example/SpringSecurity/SpringSecurityApplication.java
+===================================================================
+diff --git a/SpringSecurity/src/main/java/com/example/SpringSecurity/SpringSecurityApplication.java b/SpringSecurity/src/main/java/com/example/SpringSecurity/SpringSecurityApplication.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/src/main/java/com/example/SpringSecurity/SpringSecurityApplication.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.SpringSecurity;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++@SpringBootApplication
++public class SpringSecurityApplication {
++
++	public static void main(String[] args) {
++		SpringApplication.run(SpringSecurityApplication.class, args);
++	}
++
++}
+Index: SpringSecurity/src/main/resources/application.properties
+===================================================================
+diff --git a/SpringSecurity/src/main/resources/application.properties b/SpringSecurity/src/main/resources/application.properties
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/src/main/resources/application.properties	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,1 @@
++spring.application.name=SpringSecurity
+Index: SpringSecurity/src/main/resources/application.yaml
+===================================================================
+diff --git a/SpringSecurity/src/main/resources/application.yaml b/SpringSecurity/src/main/resources/application.yaml
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/src/main/resources/application.yaml	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,15 @@
++server:
++  port: 7777
++
++spring:
++  application:
++    name: SpringSecurity
++  datasource:
++    username: system
++    password: 31082002
++    url: jdbc:oracle:thin:@localhost:1521:xe
++    driver-class-name: oracle.jdbc.OracleDriver
++    jpa:
++      hibernate:
++        ddl-auto: true
++      show-sql: update
+\ No newline at end of file
+Index: SpringSecurity/src/test/java/com/example/SpringSecurity/SpringSecurityApplicationTests.java
+===================================================================
+diff --git a/SpringSecurity/src/test/java/com/example/SpringSecurity/SpringSecurityApplicationTests.java b/SpringSecurity/src/test/java/com/example/SpringSecurity/SpringSecurityApplicationTests.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurity/src/test/java/com/example/SpringSecurity/SpringSecurityApplicationTests.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.SpringSecurity;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++
++@SpringBootTest
++class SpringSecurityApplicationTests {
++
++	@Test
++	void contextLoads() {
++	}
++
++}
+Index: SpringSecurityFormat/.gitignore
+===================================================================
+diff --git a/SpringSecurityFormat/.gitignore b/SpringSecurityFormat/.gitignore
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/.gitignore	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,33 @@
++HELP.md
++target/
++.mvn/wrapper/maven-wrapper.jar
++!**/src/main/**/target/
++!**/src/test/**/target/
++
++### STS ###
++.apt_generated
++.classpath
++.factorypath
++.project
++.settings
++.springBeans
++.sts4-cache
++
++### IntelliJ IDEA ###
++.idea
++*.iws
++*.iml
++*.ipr
++
++### NetBeans ###
++/nbproject/private/
++/nbbuild/
++/dist/
++/nbdist/
++/.nb-gradle/
++build/
++!**/src/main/**/build/
++!**/src/test/**/build/
++
++### VS Code ###
++.vscode/
+Index: SpringSecurityFormat/.mvn/wrapper/maven-wrapper.properties
+===================================================================
+diff --git a/SpringSecurityFormat/.mvn/wrapper/maven-wrapper.properties b/SpringSecurityFormat/.mvn/wrapper/maven-wrapper.properties
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/.mvn/wrapper/maven-wrapper.properties	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,2 @@
++distributionType=only-script
++distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip
+Index: SpringSecurityFormat/pom.xml
+===================================================================
+diff --git a/SpringSecurityFormat/pom.xml b/SpringSecurityFormat/pom.xml
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/pom.xml	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,114 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>org.springframework.boot</groupId>
++		<artifactId>spring-boot-starter-parent</artifactId>
++		<version>3.5.5</version>
++		<relativePath/> <!-- lookup parent from repository -->
++	</parent>
++	<groupId>com.example</groupId>
++	<artifactId>SpringSecurityFormat</artifactId>
++	<version>0.0.1-SNAPSHOT</version>
++	<name>SpringSecurityFormat</name>
++	<description>Demo project for Spring Boot</description>
++	<url/>
++	<licenses>
++		<license/>
++	</licenses>
++	<developers>
++		<developer/>
++	</developers>
++	<scm>
++		<connection/>
++		<developerConnection/>
++		<tag/>
++		<url/>
++	</scm>
++	<properties>
++		<java.version>24</java.version>
++	</properties>
++	<dependencies>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-data-jpa</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-security</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-web</artifactId>
++		</dependency>
++
++		<dependency>
++			<groupId>com.oracle.database.jdbc</groupId>
++			<artifactId>ojdbc11</artifactId>
++			<scope>runtime</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.projectlombok</groupId>
++			<artifactId>lombok</artifactId>
++			<optional>true</optional>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.security</groupId>
++			<artifactId>spring-security-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++
++		<dependency>
++			<groupId>io.jsonwebtoken</groupId>
++			<artifactId>jjwt-api</artifactId>
++			<version>0.11.5</version>
++		</dependency>
++		<dependency>
++			<groupId>io.jsonwebtoken</groupId>
++			<artifactId>jjwt-impl</artifactId>
++			<version>0.11.5</version>
++		</dependency>
++		<dependency>
++			<groupId>io.jsonwebtoken</groupId>
++			<artifactId>jjwt-jackson</artifactId>
++			<version>0.11.5</version>
++		</dependency>
++
++	</dependencies>
++
++	<build>
++		<plugins>
++			<plugin>
++				<groupId>org.apache.maven.plugins</groupId>
++				<artifactId>maven-compiler-plugin</artifactId>
++				<configuration>
++					<annotationProcessorPaths>
++						<path>
++							<groupId>org.projectlombok</groupId>
++							<artifactId>lombok</artifactId>
++						</path>
++					</annotationProcessorPaths>
++				</configuration>
++			</plugin>
++			<plugin>
++				<groupId>org.springframework.boot</groupId>
++				<artifactId>spring-boot-maven-plugin</artifactId>
++				<configuration>
++					<excludes>
++						<exclude>
++							<groupId>org.projectlombok</groupId>
++							<artifactId>lombok</artifactId>
++						</exclude>
++					</excludes>
++				</configuration>
++			</plugin>
++		</plugins>
++	</build>
++
++</project>
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplication.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplication.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplication.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplication.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.SpringSecurityFormat;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++@SpringBootApplication
++public class SpringSecurityFormatApplication {
++
++	public static void main(String[] args) {
++		SpringApplication.run(SpringSecurityFormatApplication.class, args);
++	}
++
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AdminController.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AdminController.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AdminController.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AdminController.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,26 @@
++package com.example.SpringSecurityFormat.controller;
++
++
++import com.example.SpringSecurityFormat.entity.User;
++import com.example.SpringSecurityFormat.service.UserService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RestController;
++
++import java.util.List;
++
++@RestController
++@RequestMapping("/admin")
++public class AdminController {
++
++    @Autowired
++    private UserService userService;
++
++    @GetMapping("/getAll")
++    public ResponseEntity<List<User>> getAll()
++    {
++        return ResponseEntity.ok(userService.getAll());
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AuthController.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AuthController.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AuthController.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/controller/AuthController.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,31 @@
++package com.example.SpringSecurityFormat.controller;
++
++
++import com.example.SpringSecurityFormat.dto.AuthRequest;
++import com.example.SpringSecurityFormat.dto.UserRequestDto;
++import com.example.SpringSecurityFormat.entity.User;
++import com.example.SpringSecurityFormat.service.UserService;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.*;
++
++@RestController
++@RequestMapping("/auth")
++public class AuthController {
++
++    @Autowired
++    private UserService userService;
++
++    @PostMapping("/register")
++    public ResponseEntity<User> registerUser(@RequestBody UserRequestDto userRequestDto)
++    {
++        return ResponseEntity.ok(userService.register(userRequestDto));
++    }
++
++    @GetMapping("/authenticate")
++    public ResponseEntity<String> authenticate(@RequestBody AuthRequest authRequest)
++    {
++        return ResponseEntity.ok(userService.authenticate(authRequest));
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/AuthRequest.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/AuthRequest.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/AuthRequest.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/AuthRequest.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,15 @@
++package com.example.SpringSecurityFormat.dto;
++
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class AuthRequest {
++
++    private String username;
++    private String password;
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/UserRequestDto.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/UserRequestDto.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/UserRequestDto.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/dto/UserRequestDto.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,20 @@
++package com.example.SpringSecurityFormat.dto;
++
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++import java.util.HashSet;
++import java.util.Set;
++
++
++@Data
++@AllArgsConstructor
++@NoArgsConstructor
++public class UserRequestDto {
++
++    private String username;
++    private String email;
++    private String password;
++    private Set<String>roles=new HashSet<>();
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/Role.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/Role.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/Role.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/Role.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,21 @@
++package com.example.SpringSecurityFormat.entity;
++
++
++import jakarta.persistence.*;
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++@Entity
++@AllArgsConstructor
++@NoArgsConstructor
++@Table(name = "A_ROLE")
++@Data
++public class Role {
++
++    @Id
++    @SequenceGenerator(name = "role_seq",allocationSize = 50)
++    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
++    private Integer id;
++    private String name;
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/User.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/User.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/User.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/entity/User.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,29 @@
++package com.example.SpringSecurityFormat.entity;
++
++
++import jakarta.persistence.*;
++import lombok.AllArgsConstructor;
++import lombok.Data;
++import lombok.NoArgsConstructor;
++
++import java.util.HashSet;
++import java.util.Set;
++
++@Data
++@NoArgsConstructor
++@AllArgsConstructor
++@Entity
++@Table(name="A_USERS")
++public class User {
++    @Id
++    @SequenceGenerator(name = "user_seq",allocationSize = 50)
++    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
++    private Integer userId;
++    private String username;
++    private String email;
++    private String Password;
++    @ManyToMany(fetch = FetchType.EAGER)
++    @JoinTable(name = "user_roles")
++    private Set<Role>roles=new HashSet<>();
++
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/RoleRepo.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/RoleRepo.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/RoleRepo.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/RoleRepo.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,11 @@
++package com.example.SpringSecurityFormat.repository;
++
++import com.example.SpringSecurityFormat.entity.Role;
++import org.springframework.data.jpa.repository.JpaRepository;
++
++import java.util.Optional;
++
++public interface RoleRepo extends JpaRepository<Role,Integer> {
++
++   Optional<Role> findByName(String name);
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/UserRepo.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/UserRepo.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/UserRepo.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/repository/UserRepo.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.SpringSecurityFormat.repository;
++
++import com.example.SpringSecurityFormat.entity.User;
++import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.stereotype.Repository;
++
++import java.util.Optional;
++
++@Repository
++public interface UserRepo extends JpaRepository<User,Integer> {
++
++    Optional<User> findByUsername(String name);
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/ApplicationConfig.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/ApplicationConfig.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/ApplicationConfig.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/ApplicationConfig.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,24 @@
++package com.example.SpringSecurityFormat.security;
++
++
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.security.authentication.AuthenticationManager;
++import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
++import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
++import org.springframework.security.crypto.password.PasswordEncoder;
++
++@Configuration
++public class ApplicationConfig {
++
++    @Bean
++    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
++        return authenticationConfiguration.getAuthenticationManager();
++    }
++
++    @Bean
++    public PasswordEncoder passwordEncoder()
++    {
++        return new BCryptPasswordEncoder();
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtAuthenticationFilter.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtAuthenticationFilter.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtAuthenticationFilter.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtAuthenticationFilter.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,65 @@
++package com.example.SpringSecurityFormat.security;
++
++import com.example.SpringSecurityFormat.service.CustomUserService;
++import jakarta.servlet.FilterChain;
++import jakarta.servlet.ServletException;
++import jakarta.servlet.http.HttpServletRequest;
++import jakarta.servlet.http.HttpServletResponse;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.security.authentication.AuthenticationManager;
++import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
++import org.springframework.security.core.Authentication;
++import org.springframework.security.core.GrantedAuthority;
++import org.springframework.security.core.context.SecurityContextHolder;
++import org.springframework.security.core.userdetails.UserDetails;
++import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
++import org.springframework.stereotype.Service;
++import org.springframework.web.filter.OncePerRequestFilter;
++
++import java.io.IOException;
++
++@Service
++public class JwtAuthenticationFilter extends OncePerRequestFilter {
++
++
++    @Autowired
++    private JwtUtil jwtUtil;
++
++    @Autowired
++    private AuthenticationManager authenticationManager;
++
++    @Autowired
++    private CustomUserService customUserService;
++
++    @Override
++    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
++
++        String header = request.getHeader("Authorization");
++
++        if(header==null || !header.startsWith("Bearer "))
++        {
++            filterChain.doFilter(request,response);
++            return;
++        }
++
++        String token = header.substring(7);
++        String username = jwtUtil.extractUsername(token);
++
++        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
++            UserDetails userDetails = customUserService.loadUserByUsername(username);
++
++            for (GrantedAuthority authority : userDetails.getAuthorities()) {
++                System.out.println(authority.getAuthority());
++            }
++
++            if (jwtUtil.validateToken(token, userDetails)) {
++                UsernamePasswordAuthenticationToken authenticationToken =
++                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
++                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
++                SecurityContextHolder
++                        .getContext().setAuthentication(authenticationToken);
++            }
++        }
++        filterChain.doFilter(request, response);
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtUtil.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtUtil.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtUtil.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/JwtUtil.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,83 @@
++package com.example.SpringSecurityFormat.security;
++
++import io.jsonwebtoken.Claims;
++import io.jsonwebtoken.Jwts;
++import io.jsonwebtoken.SignatureAlgorithm;
++import io.jsonwebtoken.io.Decoders;
++import io.jsonwebtoken.security.Keys;
++import jakarta.websocket.Decoder;
++import org.springframework.security.core.userdetails.UserDetails;
++import org.springframework.stereotype.Service;
++
++import java.security.Key;
++import java.util.Base64;
++import java.util.Date;
++import java.util.HashMap;
++import java.util.Map;
++import java.util.function.Function;
++
++@Service
++public class JwtUtil {
++
++
++    private String secreteKey="nTcHbTBzfqSkbedG/pIHMVNYvi3M/4PCW69iVdXWaHA=";
++
++
++    public String extractUsername(String token)
++    {
++        return extractClaims(token, Claims::getSubject);
++    }
++
++    private Claims extractAllClaims(String token)
++    {
++        return Jwts
++                .parserBuilder()
++                .setSigningKey(getSignInKey())
++                .build()
++                .parseClaimsJws(token)
++                .getBody();
++    }
++
++    private <T>T extractClaims(String token, Function<Claims,T> claimResolver)
++    {
++        final Claims claims=extractAllClaims(token);
++        return claimResolver.apply(claims);
++    }
++
++    public String generateToken(UserDetails userDetails)
++    {
++        Map<String,Object> extraClaims=new HashMap<>();
++        return
++                Jwts
++                        .builder()
++                        .setClaims(extraClaims)
++                        .setSubject(userDetails.getUsername())
++                        .setIssuedAt(new Date(System.currentTimeMillis()))
++                        .setExpiration(new Date(System.currentTimeMillis()*1000*60*60*24))
++                        .signWith(getSignInKey())
++                        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
++                        .compact();
++    }
++
++    public boolean validateToken(String token,UserDetails userDetails)
++    {
++        final String username=extractUsername(token);
++        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
++    }
++
++    public boolean isTokenExpired(String token)
++    {
++        return extractExpireDate(token).before(new Date());
++    }
++
++    public Date extractExpireDate(String token)
++    {
++        return extractClaims(token,Claims::getExpiration);
++    }
++
++    public Key getSignInKey() {
++        byte[] keyBytes = Decoders.BASE64.decode(secreteKey);
++        return Keys.hmacShaKeyFor(keyBytes);
++
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/SecurityFilterChainConfig.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/SecurityFilterChainConfig.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/SecurityFilterChainConfig.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/security/SecurityFilterChainConfig.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,32 @@
++package com.example.SpringSecurityFormat.security;
++
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.security.config.annotation.web.builders.HttpSecurity;
++import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
++import org.springframework.security.config.http.SessionCreationPolicy;
++import org.springframework.security.web.SecurityFilterChain;
++import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
++
++@Configuration
++public class SecurityFilterChainConfig {
++
++    @Autowired
++    private JwtAuthenticationFilter jwtAuthenticationFilter;
++
++    @Bean
++    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
++        httpSecurity.csrf(AbstractHttpConfigurer::disable);
++        httpSecurity.authorizeHttpRequests(request->
++                request.requestMatchers("/auth/**")
++                        .permitAll()
++                        .requestMatchers("/admin/getAll").hasAuthority("ADMIN")
++                        .anyRequest()
++                        .authenticated());
++        httpSecurity.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
++        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
++        return httpSecurity.build();
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/CustomUserService.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/CustomUserService.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/CustomUserService.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/CustomUserService.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,35 @@
++package com.example.SpringSecurityFormat.service;
++
++import com.example.SpringSecurityFormat.entity.User;
++import com.example.SpringSecurityFormat.repository.UserRepo;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.security.core.authority.SimpleGrantedAuthority;
++import org.springframework.security.core.userdetails.UserDetails;
++import org.springframework.security.core.userdetails.UserDetailsService;
++import org.springframework.security.core.userdetails.UsernameNotFoundException;
++import org.springframework.stereotype.Service;
++
++import java.util.Set;
++import java.util.stream.Collectors;
++
++@Service
++public class CustomUserService implements UserDetailsService {
++
++    @Autowired
++    private UserRepo userRepo;
++    @Override
++    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
++        User user = userRepo.findByUsername(username)
++                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
++        Set<SimpleGrantedAuthority> authorities = user.getRoles()
++                .stream()
++                .map(role -> new SimpleGrantedAuthority(role.getName()))
++                .collect(Collectors.toSet());
++
++        return new org.springframework.security.core.userdetails.User(
++                user.getUsername(),
++                user.getPassword(),
++                authorities
++        );
++    }
++}
+Index: SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/UserService.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/UserService.java b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/UserService.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/java/com/example/SpringSecurityFormat/service/UserService.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,73 @@
++package com.example.SpringSecurityFormat.service;
++
++import com.example.SpringSecurityFormat.dto.AuthRequest;
++import com.example.SpringSecurityFormat.dto.UserRequestDto;
++import com.example.SpringSecurityFormat.entity.Role;
++import com.example.SpringSecurityFormat.entity.User;
++import com.example.SpringSecurityFormat.repository.RoleRepo;
++import com.example.SpringSecurityFormat.repository.UserRepo;
++import com.example.SpringSecurityFormat.security.JwtUtil;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.security.authentication.AuthenticationManager;
++import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
++import org.springframework.security.core.userdetails.UserDetails;
++import org.springframework.security.core.userdetails.UsernameNotFoundException;
++import org.springframework.security.crypto.password.PasswordEncoder;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++import java.util.Set;
++import java.util.stream.Collectors;
++
++@Service
++public class UserService {
++
++    @Autowired
++    private UserRepo userRepo;
++
++    @Autowired
++    private RoleRepo roleRepo;
++
++    @Autowired
++    private PasswordEncoder passwordEncoder;
++
++    @Autowired
++    private AuthenticationManager authenticationManager;
++
++    @Autowired
++    private JwtUtil jwtUtil;
++
++    @Autowired
++    private CustomUserService customUserService;
++
++    public User register(UserRequestDto userRequestDto)
++    {
++        User user=new User();
++        user.setUsername(userRequestDto.getUsername());
++        user.setEmail(userRequestDto.getEmail());
++        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
++
++        Set<String> roles = userRequestDto.getRoles();
++        Set<Role> roleSet = roles.stream().map(role -> roleRepo.findByName(role).
++                        orElseThrow(() -> new UsernameNotFoundException("Role not found")))
++                .collect(Collectors.toSet());
++        user.setRoles(roleSet);
++        userRepo.save(user);
++        return user;
++    }
++
++    public String authenticate(AuthRequest authRequest)
++    {
++        authenticationManager.authenticate(
++                new UsernamePasswordAuthenticationToken(authRequest.getUsername(),authRequest.getPassword())
++        );
++        UserDetails userDetails = customUserService.loadUserByUsername(authRequest.getUsername());
++        return jwtUtil.generateToken(userDetails);
++
++    }
++
++    public List<User> getAll()
++    {
++        return userRepo.findAll();
++    }
++}
+Index: SpringSecurityFormat/src/main/resources/application.properties
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/resources/application.properties b/SpringSecurityFormat/src/main/resources/application.properties
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/resources/application.properties	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,1 @@
++spring.application.name=SpringSecurityFormat
+Index: SpringSecurityFormat/src/main/resources/application.yaml
+===================================================================
+diff --git a/SpringSecurityFormat/src/main/resources/application.yaml b/SpringSecurityFormat/src/main/resources/application.yaml
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/main/resources/application.yaml	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,15 @@
++server:
++  port: 9090
++
++spring:
++  application:
++    name: SpringSecurityFormat
++  datasource:
++    username: system
++    password: 31082002
++    url: jdbc:oracle:thin:@localhost:1521:xe
++    driver-class-name: oracle.jdbc.OracleDriver
++    jpa:
++      hibernate:
++        show-sql: update
++        ddl-auto: true
+\ No newline at end of file
+Index: SpringSecurityFormat/src/test/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplicationTests.java
+===================================================================
+diff --git a/SpringSecurityFormat/src/test/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplicationTests.java b/SpringSecurityFormat/src/test/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplicationTests.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/SpringSecurityFormat/src/test/java/com/example/SpringSecurityFormat/SpringSecurityFormatApplicationTests.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.SpringSecurityFormat;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++
++@SpringBootTest
++class SpringSecurityFormatApplicationTests {
++
++	@Test
++	void contextLoads() {
++	}
++
++}
+Index: UnsecuredSecurity/.gitignore
+===================================================================
+diff --git a/UnsecuredSecurity/.gitignore b/UnsecuredSecurity/.gitignore
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/.gitignore	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,33 @@
++HELP.md
++target/
++.mvn/wrapper/maven-wrapper.jar
++!**/src/main/**/target/
++!**/src/test/**/target/
++
++### STS ###
++.apt_generated
++.classpath
++.factorypath
++.project
++.settings
++.springBeans
++.sts4-cache
++
++### IntelliJ IDEA ###
++.idea
++*.iws
++*.iml
++*.ipr
++
++### NetBeans ###
++/nbproject/private/
++/nbbuild/
++/dist/
++/nbdist/
++/.nb-gradle/
++build/
++!**/src/main/**/build/
++!**/src/test/**/build/
++
++### VS Code ###
++.vscode/
+Index: UnsecuredSecurity/.mvn/wrapper/maven-wrapper.properties
+===================================================================
+diff --git a/UnsecuredSecurity/.mvn/wrapper/maven-wrapper.properties b/UnsecuredSecurity/.mvn/wrapper/maven-wrapper.properties
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/.mvn/wrapper/maven-wrapper.properties	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,2 @@
++distributionType=only-script
++distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.11/apache-maven-3.9.11-bin.zip
+Index: UnsecuredSecurity/pom.xml
+===================================================================
+diff --git a/UnsecuredSecurity/pom.xml b/UnsecuredSecurity/pom.xml
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/pom.xml	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,110 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>org.springframework.boot</groupId>
++		<artifactId>spring-boot-starter-parent</artifactId>
++		<version>3.5.5</version>
++		<relativePath/> <!-- lookup parent from repository -->
++	</parent>
++	<groupId>com.example</groupId>
++	<artifactId>UnsecuredSecurity</artifactId>
++	<version>0.0.1-SNAPSHOT</version>
++	<name>UnsecuredSecurity</name>
++	<description>Demo project for Spring Boot</description>
++	<url/>
++	<licenses>
++		<license/>
++	</licenses>
++	<developers>
++		<developer/>
++	</developers>
++	<scm>
++		<connection/>
++		<developerConnection/>
++		<tag/>
++		<url/>
++	</scm>
++	<properties>
++		<java.version>24</java.version>
++	</properties>
++	<dependencies>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-security</artifactId>
++		</dependency>
++
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-web</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>io.jsonwebtoken</groupId>
++			<artifactId>jjwt-api</artifactId>
++			<version>0.12.6</version>
++		</dependency>
++		<dependency>
++			<groupId>io.jsonwebtoken</groupId>
++			<artifactId>jjwt-impl</artifactId>
++			<version>0.12.6</version>
++		</dependency>
++		<dependency>
++			<groupId>io.jsonwebtoken</groupId>
++			<artifactId>jjwt-jackson</artifactId>
++			<version>0.12.6</version>
++		</dependency>
++
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-devtools</artifactId>
++			<scope>runtime</scope>
++			<optional>true</optional>
++		</dependency>
++		<dependency>
++			<groupId>org.projectlombok</groupId>
++			<artifactId>lombok</artifactId>
++			<optional>true</optional>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.security</groupId>
++			<artifactId>spring-security-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++	</dependencies>
++
++	<build>
++		<plugins>
++			<plugin>
++				<groupId>org.apache.maven.plugins</groupId>
++				<artifactId>maven-compiler-plugin</artifactId>
++				<configuration>
++					<annotationProcessorPaths>
++						<path>
++							<groupId>org.projectlombok</groupId>
++							<artifactId>lombok</artifactId>
++						</path>
++					</annotationProcessorPaths>
++				</configuration>
++			</plugin>
++			<plugin>
++				<groupId>org.springframework.boot</groupId>
++				<artifactId>spring-boot-maven-plugin</artifactId>
++				<configuration>
++					<excludes>
++						<exclude>
++							<groupId>org.projectlombok</groupId>
++							<artifactId>lombok</artifactId>
++						</exclude>
++					</excludes>
++				</configuration>
++			</plugin>
++		</plugins>
++	</build>
++
++</project>
+Index: UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplication.java
+===================================================================
+diff --git a/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplication.java b/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplication.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplication.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.UnsecuredSecurity;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++@SpringBootApplication
++public class UnsecuredSecurityApplication {
++
++	public static void main(String[] args) {
++		SpringApplication.run(UnsecuredSecurityApplication.class, args);
++	}
++
++}
+Index: UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/config/SecurityConfig.java
+===================================================================
+diff --git a/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/config/SecurityConfig.java b/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/config/SecurityConfig.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/config/SecurityConfig.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,36 @@
++package com.example.UnsecuredSecurity.config;
++
++
++import lombok.extern.slf4j.Slf4j;
++import org.springframework.context.annotation.Bean;
++import org.springframework.context.annotation.Configuration;
++import org.springframework.security.config.Customizer;
++import org.springframework.security.config.annotation.web.builders.HttpSecurity;
++import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
++import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
++import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
++import org.springframework.security.crypto.password.PasswordEncoder;
++import org.springframework.security.web.SecurityFilterChain;
++
++@Slf4j
++@Configuration
++@EnableWebSecurity
++public class SecurityConfig {
++
++    @Bean
++    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
++        http
++                .csrf(AbstractHttpConfigurer::disable) // disable CSRF for testing
++                .authorizeHttpRequests(auth -> auth
++                        .requestMatchers("/public").permitAll()   // ✅ public endpoint
++                        .anyRequest().authenticated()             // ✅ all others need auth
++                )
++                .httpBasic(Customizer.withDefaults()); // Basic Auth for now
++        return http.build();
++    }
++
++//    @Bean
++//    public PasswordEncoder passwordEncoder() {
++//        return new BCryptPasswordEncoder(); // for encoding passwords
++//    }
++}
+\ No newline at end of file
+Index: UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/controller/HelloController.java
+===================================================================
+diff --git a/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/controller/HelloController.java b/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/controller/HelloController.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/src/main/java/com/example/UnsecuredSecurity/controller/HelloController.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,18 @@
++package com.example.UnsecuredSecurity.controller;
++
++import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.RestController;
++
++@RestController
++public class HelloController {
++
++    @GetMapping("/public")
++    public String publicEndPoint(){
++        return "This is Public EndPoint. No Login Required !";
++    }
++
++    @GetMapping("/hello")
++    public String helloEndPoint(){
++        return "Hello, this is a SECURED endpoint 🔐";
++    }
++}
+Index: UnsecuredSecurity/src/main/resources/application.properties
+===================================================================
+diff --git a/UnsecuredSecurity/src/main/resources/application.properties b/UnsecuredSecurity/src/main/resources/application.properties
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/src/main/resources/application.properties	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,2 @@
++spring.application.name=UnsecuredSecurity
++server.port= 9999
+\ No newline at end of file
+Index: UnsecuredSecurity/src/test/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplicationTests.java
+===================================================================
+diff --git a/UnsecuredSecurity/src/test/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplicationTests.java b/UnsecuredSecurity/src/test/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplicationTests.java
+new file mode 100644
+--- /dev/null	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
++++ b/UnsecuredSecurity/src/test/java/com/example/UnsecuredSecurity/UnsecuredSecurityApplicationTests.java	(revision b33875814798980ab6fa5ae5440ea89855fd4ef5)
+@@ -0,0 +1,13 @@
++package com.example.UnsecuredSecurity;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.boot.test.context.SpringBootTest;
++
++@SpringBootTest
++class UnsecuredSecurityApplicationTests {
++
++	@Test
++	void contextLoads() {
++	}
++
++}
+diff --git a/SpringSecurity/.gitattributes b/SpringSecurity/.gitattributes
+new file mode 100644
+index 0000000000000000000000000000000000000000..0ac0d337a2fd22972d6933a062fe87a87d3b22d9
+GIT binary patch
+literal 40
+kc%0MEEz2ucC`qj-QAo|tvCT>2<<ini&P_oGB^QAN0T-AJF8}}l
+
+diff --git a/SpringSecurity/mvnw b/SpringSecurity/mvnw
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8f193005f114945c254c2728696330d226d283b
+GIT binary patch
+literal 12085
+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
+Q%WrSVQL(&KSR2v*4=babQ2+n{
+
+diff --git a/SpringSecurity/mvnw.cmd b/SpringSecurity/mvnw.cmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..3fd2be86010f1afd15d3448d5812b9e5c38c2d9c
+GIT binary patch
+literal 8481
+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
+
+diff --git a/SpringSecurityFormat/.gitattributes b/SpringSecurityFormat/.gitattributes
+new file mode 100644
+index 0000000000000000000000000000000000000000..0ac0d337a2fd22972d6933a062fe87a87d3b22d9
+GIT binary patch
+literal 40
+kc%0MEEz2ucC`qj-QAo|tvCT>2<<ini&P_oGB^QAN0T-AJF8}}l
+
+diff --git a/SpringSecurityFormat/mvnw b/SpringSecurityFormat/mvnw
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8f193005f114945c254c2728696330d226d283b
+GIT binary patch
+literal 12085
+zc$~c&YjfI2^7FdN|Dhv00UQfrC+oW<AvqS~gxwhX0LPn4Qq&*~ptX>+dKeSO_uH>~
+zX7ofP&eiVbVa%wzr{CSvqn!thiRCnc`S#Wh=zroLqW9J^xD#*_LKnh0hqlKI{202^
+zaLIfQCvN1JEVNt)s_o%P4e%@X!F4!cyFM&jgfd(w^sPx0;({$H0-O1qFSrv1b$}t~
+zf_(pM)a!I%YS{wcv;v8T3@oj1jxbgLOV_`GDUxEQY0=iq2Ft;Pg<ymbeLiEpX*o08
+z+FSY7Y#xHUbhsbPEf4n_ktoBHn3+Hlj<-cwS8k+4$w;k~u@CQ%5Q%(Pe*#qmAS6va
+z)oRZL_JXazaYKj#o>B*XV{k7-c9F4#XIsoM1h$ec*#mieuZXylkRd!1qJTTif&mK=
+zn+V{ac^G=lMq{~L)|p_q?)tMvEMns=YPLV@>d3Uhxo~VA1gNY(BFje=PgcM@WXfO@
+zWYuO%GN7=Nus<@f^iko?Y@e`$*axy!N_7@<h>~XkP-{$>NNW$FH`L(g_OLhHhs)mR
+z&Dq5WF581ayFco6hj2E4&RPGsH|m}B@!JWs`|k<!*Ixg4A2@0Zx8gURPeLH47AcgQ
+z8Fz|#AZJl#3OsIDQ_Dc{oLR(X9A@q{_Z{*TkNXQNAj<~Gq>0|KutMQe0imwRR{!%O
+z?yrbp<-Mounmcgmqlr<BAY^_Rc`#w2F^9nLEic@MYvtHa>-blB$(g5OtlNJF*US$}
+zd6Yi*OZ#1W{O0Vm3p&`YArk|-EQ4Q;e}%cbAaC*aQ<q!LktY*F({`DO?oKRTTMT|@
+z*9<)@@@04coWAQ{jtAZIvx~u7B<^$1g~+#&e`Vj82pLk+N!(5)1x4gy*d6rSr`?A5
+zcHSNiFV6<YNE0K~7k2kp5MYuq%jsrFz3UEsJ{yv-p&#)ka7RQAYH{KsTedrU4kn*O
+zvnB#CLptT++F2@vKL?kbIA}tE$-z+oZWMY^_*eK=z(de^G~M3%0NU<tRtEh}g9k0i
+zEqsD6UqArgNS8btrhyYgp6B`@I=_SVz2;+&h4X3+Zo%^{C!E5=;NwRJ=^tp%;ck1&
+zAPZ@`)yQEBUehp*Y;SemzrO7C_uvbh_WG|c_iEc)03SgAOl&1iL_7&rl9d+HF;+9$
+z5tS1;)(s*gPqmsxbc$@H2<l^LIcU`&Wf9={^X)AjFhhz<q7&85>9KGK@jHGI8XS{v
+zj>(saIw9|18T6sEnk^|$BmAl5yuQQ~<pdGtN7@w=3jT(VFNkMZt6;*XR2`YK!UBQr
+zg{d-hBaBs(s9ICfh_kMd=j0_0fy6*LEi``jId%gLVzU5EtoD9Btpp+*F*Mt~-^lF)
+zOb0&ZL!Ja}5a&!xu-u43^6MZbqEyq`v}q3RD}aWA<aWTnMw{B3ZxfE8h-wTd)bk)!
+z5aKA8$}h|HysD5dWA1`Ry+WGTxN~j!u0xFrB|}RDJQ|Kly~(GRgGtSBeV-elz1qhV
+zCga^;4ng>lQ`g|-qr>7R=>|xP+z;#R$Bc9zwSB-$hHD>7ME<Bz{VRWF;6u~pl0$xj
+zIkCur&%?-f;2>U^TJksfnHncGO*ICsAgdL4oLH|CIbubhQh&3cSU7yyF!^=EiEKN8
+zQqK_XT4Z|p0CNKxrkUC7ui4EgY?p~7<rB9`)Fc5Fp2Uyx4wJeI?IM+*FqSs~WrFke
+z=nby;WbxGeDA2dPCT}rmC;E9O)7P8@bBbunDYkWm?n~8lC>EMcdfIVK)FS;hmT++@
+z!*8hZ+k+;_H*Y<mwdI^TSCxwpKnQNSa&u$O1O~1@lpi~<?zB4<s`J)vwOXCS9y~pO
+z$FN&{+ZlI8@6WrfPEsvQ&?>t`Myu7}Av`<$>Df<5|2X{Vs8*9i6i<pYt(oF{0SSp4
+zDmc4yr2tiaMec8k{JyE$QPq|P&f*lx*zEyA3o_eVrj;c9wPF_=2n`&PX#@f)cafHf
+z)5}5o{JcBR51#(iluLLPL6Cs@1Is3ZiN=%5egich@&Ma6JaZV#$83WsS{gst2TaQN
+zQ#Ps&pJJCD)MKK3{KjPi<MV}kE!tbx_3ah9UdVlHnyDLi_>yqZ>;8zS{|ID5h7Knh
+zV)Rlvzr{rPjT>SEkV%1<tFT@H3t)lpOX|kvR97x#g{@~4r9BKZp-oi%7ZewC6Dl8?
+zLb~Rsiqe<ti;gX_cokbk>KPF0i74&zVIP<1DRq9i$K?7R_NP48`CVX>NIG)kHa7ck
+zIA@1H9u1>K(vk*H$IxpmWt-d(9iOhg)ji+EkI<r0D5IixGHhur4Y9F()qS|)D=Z6k
+z#N!B2-OnvPAg8lLwkYsdD=uKvkmC@ZAcmMV(V{>(_qFonuaJ?w4#g3?z@Uz`-nf_W
+z8by@sObU!A2@?Yav^af{Zi*&R)W{v-|JXliD~lZL?Cdp^o+UaGH1$2KhIQFxVj37z
+zU7__ldh0kjS>Rb<G{Un%OK#jCh(^|i=Yz9OcQ`y7jN60Go8G9~8C?u8my|rYJbL!@
+zP`_)cwik3(i;ch6K0Q8q)=XPqwV*oToTkog7E-g=QZ1{_7Ut12Wy9t%^KpIe=ATF7
+zqh}isO#xGi$Na@N(U@<{Q^dEH6Wyr&HgRebOm4qDmB(d$>`13DG5;8$>eazh*dk$(
+z-YJR1M+QAn;-a=M<|!Vv)#8Y#4y>8#_${U+R5l9M;<2^vRu6UIL3jFY8U6Za%hTdx
+zMAq$U-|KFILIzF4RV;l;;@hFV0R6j+3{89F;73s`oN8#cv&tW&DKQ$%HX;;+!)g0n
+zw=dcd0+)wqac0L84Au;%3ID|aJxt=0R1q|8<(|5f`-QT|%l(WVl12SRZ0VPGjTh8^
+zycD_Qb5fucXPHD&G))$4cU=$b8DUQ=0TV4s0a8_#@|02veabAS1cM$uL~r?SBzh!V
+zjZmdIXj~DWeQyg(O?~&4KJUmZDar=uyMp01a-iQecB`4@5RFrSRP~n5hGSvpxW^G4
+zd44#O8@fP#=#q2BxcMilxMeDfILqv+kf0{wUs|!o2%L>5s=1JdWiv-R*Tu(!8*NHs
+zZP}`m{3$r#u|10&^DDI=SliyBR(xZDio1ZlS0bfg=AaVrDibZQ_V6D)sKwbpNLs9*
+z>d=Xm-7@!K5#gy~A%=N-31Ld6nQTOB@)#-QtCTQT(F$1uJ4KIX7vaLA*`3hh==6Mi
+ze0JG?d)7W4ANK~-jxDZ2jv%^;h3?U#SkXnuoVpF{bA{&sW`5nDg07dLs1Xfz$eu)j
+zHy7v7>yH2f`4qap^+w3BI;Liw!obc0)0*H5Sx+ppxWaFsdvd?q)SM3+B4$bK<9H@X
+zDYEATA+zn=BsDo_U`cZ$+jJ_ZR*Qx|3Az2;@Q?^ul91@FL#Ws5T87MV26*bbizcjv
+z-3I8;McAU=8bxdhZ!I2h*;IXFC#i?bug^XU+dfE+tax0G9D+#C)T!<6Q8J18og%H3
+z;Cv(9N?YwDL5U6g_SRTt@_%3Sx})*s>+Yzf>)5wr&dELLU_QYoVyaqrbkYA$@4Th|
+zkzXCP2dzrwJ}1R>4l0$B&5Mh2+u|y1do9IuXeMY|pSifl0TzYxG>7D}X7e%TW<4HK
+zt8`MS)bg2@_R68r0)=)Kxt5F=bGS+My&uImS;+kQc>_623K`E@&d_FMj+HpLxLTBO
+z7%15Hi4!q?6}}|acW>9M(R_^6zPPB}m6R~h&q}gQdDJB3hPG|O37*yEo!FF9#x03c
+zZhwz947$p=hc*OUstx)ov?10D+8{Sv(*`Y~HgwFjZ$WqOuYeN$B_$X)zrRj$6ZA4c
+zReqc><BF(Jzc1!j_<NjAh0H``C~k;aB~rxc5f6^Z=onKGn(sfBSB9`5Thi$d9aY;+
+zx6|Oo3%%Pv-roAbizc>ZU{%6+f^<u42}16ef#9+3@UY&FNYKziVlLLuAFx^afkq=P
+zoq|wp3E;Vk%nSnEp&{SpPpUORNzzLugAQMQi)0mss{l)59Z7TNx(Zs(OEti=Rw+ar
+z{RmMH-Oil(ZQo}rtmC!kf{QyTn^a9e7pMkYyB1yVS+uR_DL;Gyv_=3m^Z=hOW4hvI
+zTwK*<<Uwya=2I5gVO0o~>NwpGl&F?lr#trg3H}J`bX#6cm2ffW)nz|W6&rte@=5TI
+z@ldVRU5`7+7iWtqik&BSPS-c21BG}X5!;i%wWE-qi)*HOlD_kLp#Q>E^0!0{bwd;^
+zEs7O+Lxc{l=4OQpqIeu9C(4vE;-PsGHK0SsU3hYYSnz$-X8>KoW$wnZcONxv{b9!8
+zYiY2jVQz^1cyTwa$k#w||9xCZrgXzwf4<frB48%=N;1_Ni6j$<gG}6M^rrDGC&!Lj
+zG}fYjq!(V^wDrRuk06K^@hcdoYnRMG&60eHBy)LJI+`n7AFRU+cz{mdnljbb3W8dC
+z2x>t*QOMmws2R(g8&|}tl7V<r#|3qJt7gOL=^%T-Ac>q~t1V}#@=`k`HCd%Y<w~h|
+z716-bdob}H>r=ekj%sF3*G<+mTNwjEl4L0>k3uh!-Q7|~;J$q^9>UVCbOZf1-4705
+zK03(X^=vd4HH!J`vo(4CE@6Zu49IO!pg&8T_%?8}r!AR$r-%pSW^~+i)XO@RM8y?4
+zc2p#j6>&F?DZ#SI(>8jdIy}X1{wSsH6Q#e|Nu@4CNS0VistzMm1aDb<c75OVvn^AS
+zYf6%eN<I6M(Gq}#c)e}HMMg%6tbmt<GbT6jQkzHnm|0?KI43qhQ%Q~_oJe#@PAtD=
+zNJjaabrmOAd7Pw3K*Pu^d9TB!d{XFd#ffUI!4<2b-@j+5Y#39-^=_KjNHC$LlLo9I
+zaPxUu;0jN4YdqoFcX8CYH%G`rrhc8!_<=0Oj4)z0b)h~J?WJka3kj~j0x?Lh&Qawy
+zz4qZSFPOWbxc9>#q~awY=vAN`4z`(+>T!l;aZjhkoBKhC=j4@oYsBNFJIfo%S!6Rm
+z=T1Q_JD<Ckrf5`|tD+Kr`aSrC(PA!EH^{q@m7=#}#8Jf+vo>t?INhbl_g0-%MlZ>$
+zpE4TL_id!I5);+32kcVba{TYaZ==m@cQTPvBCta4Q&`h0kMw0B-sz!{?c=FnU*uAs
+zF6ByGu(6lk`=_=t3md0Tr}F97bo@0vXK#3ElbV*|Ot4qKDt}=memOwAzc!7{@ja@`
+z4ECH*+;U^fx2BF}zSG^U+5zY`D{oMf(WICaO1}`p!u52XdWPj>LYTY<JJ=-L3zLBq
+z@M|QSutEIot-|{ZYd!SKvZyL0MmJf@x*Sa`uFHqI8&I{vY+k&2vp%uU<wEjnDkqQ|
+Q%WrSVQL(&KSR2v*4=babQ2+n{
+
+diff --git a/SpringSecurityFormat/mvnw.cmd b/SpringSecurityFormat/mvnw.cmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..3fd2be86010f1afd15d3448d5812b9e5c38c2d9c
+GIT binary patch
+literal 8481
+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
+
+diff --git a/UnsecuredSecurity/.gitattributes b/UnsecuredSecurity/.gitattributes
+new file mode 100644
+index 0000000000000000000000000000000000000000..0ac0d337a2fd22972d6933a062fe87a87d3b22d9
+GIT binary patch
+literal 40
+kc%0MEEz2ucC`qj-QAo|tvCT>2<<ini&P_oGB^QAN0T-AJF8}}l
+
+diff --git a/UnsecuredSecurity/mvnw b/UnsecuredSecurity/mvnw
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8f193005f114945c254c2728696330d226d283b
+GIT binary patch
+literal 12085
+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
+Q%WrSVQL(&KSR2v*4=babQ2+n{
+
+diff --git a/UnsecuredSecurity/mvnw.cmd b/UnsecuredSecurity/mvnw.cmd
+new file mode 100644
+index 0000000000000000000000000000000000000000..3fd2be86010f1afd15d3448d5812b9e5c38c2d9c
+GIT binary patch
+literal 8481
+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
+
