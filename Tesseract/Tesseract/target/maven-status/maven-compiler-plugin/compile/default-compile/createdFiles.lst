@@ -1,0 +1,3 @@
+com\exampleOCR\Tesseract\TesseractApplication.class
+com\exampleOCR\Tesseract\controller\OcrController.class
+com\exampleOCR\Tesseract\service\HandleOcr.class

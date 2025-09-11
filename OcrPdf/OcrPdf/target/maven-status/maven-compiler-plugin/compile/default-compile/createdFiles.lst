@@ -1,0 +1,3 @@
+com\exampleOCR\OcrPdf\controller\OcrController.class
+com\exampleOCR\OcrPdf\OcrPdfApplication.class
+com\exampleOCR\OcrPdf\service\OcrService.class

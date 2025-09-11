@@ -1,0 +1,4 @@
+com\example\SecurityLearn\SecurityLearnApplication.class
+com\example\SecurityLearn\controller\HelloController.class
+com\example\SecurityLearn\controller\StudentController.class
+com\example\SecurityLearn\Fields\Student.class
