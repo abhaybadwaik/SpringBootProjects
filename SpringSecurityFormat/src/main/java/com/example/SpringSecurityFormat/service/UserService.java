@@ -46,7 +46,6 @@ public class UserService {
         user.setUsername(userRequestDto.getUsername());
         user.setEmail(userRequestDto.getEmail());
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-
         Set<String> roles = userRequestDto.getRoles();
         Set<Role> roleSet = roles.stream().map(role -> roleRepo.findByName(role).
                         orElseThrow(() -> new UsernameNotFoundException("Role not found")))
