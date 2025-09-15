@@ -18,7 +18,7 @@ public class AdminController {
     @Autowired
     UserService userService;
 
-    @GetMapping("getAll")
+    @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
