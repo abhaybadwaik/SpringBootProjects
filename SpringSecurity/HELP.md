@@ -7,8 +7,8 @@ For further reference, please consider the following sections:
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.5.5/maven-plugin)
 * [Create an OCI image](https://docs.spring.io/spring-boot/3.5.5/maven-plugin/build-image.html)
 * [Spring Web](https://docs.spring.io/spring-boot/3.5.5/reference/web/servlet.html)
-* [Spring Security](https://docs.spring.io/spring-boot/3.5.5/reference/web/spring-security.html)
 * [Spring Data JPA](https://docs.spring.io/spring-boot/3.5.5/reference/data/sql.html#data.sql.jpa-and-spring-data)
+* [Spring Security](https://docs.spring.io/spring-boot/3.5.5/reference/web/spring-security.html)
 
 ### Guides
 The following guides illustrate how to use some features concretely:

@@ -1,0 +1,5 @@
+com\exampleCarAPI\CarOwner\controller\CarController.class
+com\exampleCarAPI\CarOwner\CarOwnerApplication.class
+com\exampleCarAPI\CarOwner\entity\CarEntity.class
+com\exampleCarAPI\CarOwner\repo\CarRepository.class
+com\exampleCarAPI\CarOwner\service\CarService.class

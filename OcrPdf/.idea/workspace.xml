@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="54ef2b01-2c8f-4739-a6be-27c8de1e09fe" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="31DiuOD7gk5xCQngb2FyLQPD5sQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainHaiYe.executor": "Run",
+    "Application.OcrPdfApplication.executor": "Run",
+    "Maven.OcrPdf [clean].executor": "Run",
+    "Maven.OcrPdf [install].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/ABHAY/Downloads/OcrPdf"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="MainHaiYe" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.exampleOCR.OcrPdf.OcrPdfApplication" />
+      <module name="OcrPdf" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="54ef2b01-2c8f-4739-a6be-27c8de1e09fe" name="Changes" comment="" />
+      <created>1755065265590</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1755065265590</updated>
+    </task>
+    <servers />
+  </component>
+</project>
