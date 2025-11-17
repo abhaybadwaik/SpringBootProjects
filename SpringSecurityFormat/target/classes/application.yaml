@@ -1,0 +1,15 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: SpringSecurityFormat
+  datasource:
+    username: system
+    password: 31082002
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    driver-class-name: oracle.jdbc.OracleDriver
+    jpa:
+      hibernate:
+        show-sql: update
+        ddl-auto: true

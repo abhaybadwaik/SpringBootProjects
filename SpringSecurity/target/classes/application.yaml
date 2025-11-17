@@ -1,5 +1,6 @@
 server:
-  port: 1331
+  port: 7777
+
 spring:
   application:
     name: SpringSecurity
@@ -8,11 +9,7 @@ spring:
     password: 31082002
     url: jdbc:oracle:thin:@localhost:1521:xe
     driver-class-name: oracle.jdbc.OracleDriver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-logging:
-  level:
-    org:
-      springframework.security: DEBUG
+    jpa:
+      hibernate:
+        ddl-auto: true
+      show-sql: update
