@@ -31,5 +31,8 @@ public class BookController {
     public String deleteByID(@RequestParam("id") int id){
         return bookService.deleteById(id);
     }
-
+    @PutMapping("/update/{id}")
+    public BookEntity updateById(@PathVariable Integer id,@RequestBody BookEntity book){
+        return  bookService.updateById(book,id);
+    }
 }
